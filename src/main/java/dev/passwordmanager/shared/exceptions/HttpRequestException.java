@@ -5,10 +5,10 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public class HttpRequestException extends RuntimeException {
-    private final Integer statusCode;
+    private final HttpStatus status;
 
     protected HttpRequestException(String message, HttpStatus status) {
         super(message);
-        this.statusCode = status.value();
+        this.status = status;
     }
 }
