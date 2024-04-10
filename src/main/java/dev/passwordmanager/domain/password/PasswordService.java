@@ -1,7 +1,6 @@
 package dev.passwordmanager.domain.password;
 
 import dev.passwordmanager.domain.user.User;
-import dev.passwordmanager.shared.utils.EncryptionUtil;
 import dev.passwordmanager.shared.utils.ExceptionHandler;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

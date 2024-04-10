@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 @Tag(name = "Password")
 public interface PasswordOpenApi {
-    @Operation(summary = "Create user")
+    @Operation(summary = "Create password")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Password created"),
             @ApiResponse(responseCode = "400", description = "Invalid request"),

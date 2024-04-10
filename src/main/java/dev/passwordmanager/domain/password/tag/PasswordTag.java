@@ -26,16 +26,17 @@ public class PasswordTag {
     @Column(nullable = false)
     private String tag;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "passwords_tags",
-            joinColumns = @JoinColumn(name = "tag_id"),
-            inverseJoinColumns = @JoinColumn(name = "password_id")
-    )
-    private Set<Password> tags;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false)
+    private Password password;
 
     @Column(nullable = false)
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime createdAt;
+
+    public PasswordTag(String tag, Password password) {
+        this.tag = tag;
+        this.password = password;
+    }
 }

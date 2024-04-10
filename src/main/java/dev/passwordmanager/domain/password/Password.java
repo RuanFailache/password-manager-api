@@ -35,12 +35,7 @@ public class Password {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "passwords_tags",
-            joinColumns = @JoinColumn(name = "password_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
+    @OneToMany(fetch = FetchType.EAGER)
     private Set<PasswordTag> tags;
 
     @Column(nullable = false)

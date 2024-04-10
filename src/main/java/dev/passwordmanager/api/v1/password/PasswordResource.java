@@ -2,6 +2,7 @@ package dev.passwordmanager.api.v1.password;
 
 import dev.passwordmanager.api.v1.password.dto.request.CreatePasswordDto;
 import dev.passwordmanager.domain.password.PasswordService;
+import dev.passwordmanager.domain.password.tag.PasswordTagService;
 import dev.passwordmanager.domain.user.UserService;
 import dev.passwordmanager.shared.exceptions.ForbiddenException;
 import dev.passwordmanager.shared.utils.EncryptionUtil;
@@ -22,6 +23,8 @@ public class PasswordResource implements PasswordOpenApi {
 
     private final PasswordService passwordService;
 
+    private final PasswordTagService passwordTagService;
+
     private final EncryptionUtil encryptionUtil;
 
     @PostMapping
@@ -32,9 +35,11 @@ public class PasswordResource implements PasswordOpenApi {
             throw new ForbiddenException("User's password limit reached");
         }
 
-        var password = encryptionUtil.encrypt(dto.password());
+        var encrypted = encryptionUtil.encrypt(dto.password());
 
-        passwordService.create(user, dto.description(), password);
+        var password = passwordService.create(user, dto.description(), encrypted);
+
+        dto.tags().forEach(tag -> passwordTagService.create(password, tag));
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
