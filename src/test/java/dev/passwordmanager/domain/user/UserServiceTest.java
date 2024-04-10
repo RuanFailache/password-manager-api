@@ -72,9 +72,7 @@ class UserServiceTest {
     @Test
     public void testFindOrThrowWhenNotFoundUser() {
         var expectedUser = userMock.generate();
-
         doReturn(Optional.empty()).when(userRepository).findById(anyLong());
-
         assertThrows(NotFoundException.class, () -> sut.findOrThrow(expectedUser.getId()));
     }
 
@@ -93,18 +91,52 @@ class UserServiceTest {
     }
 
     @Test
-    void testCreateWhenNameAlreadyIsRegistered() {
-        var expectedUser = userMock.generate();
-
-        doReturn(Optional.of(expectedUser)).when(userRepository).findByName(anyString());
-
-        assertThrows(ConflictException.class, () -> sut.create(expectedUser.getName()));
-    }
-
-    @Test
     void testCreateWhenExceptionThrown() {
         doReturn(Optional.empty()).when(userRepository).findByName(anyString());
         doThrow(new SimulatedException()).when(userFactory).create(anyString());
         assertThrows(InternalServerErrorException.class, () -> sut.create("test"));
+    }
+
+    @Test
+    void testUpdateWhenSuccessful() {
+        var expectedUser = userMock.generate();
+
+        doReturn(Optional.empty()).when(userRepository).findByName(anyString());
+        doReturn(Optional.of(expectedUser)).when(userRepository).findById(anyLong());
+
+        var newName = "test";
+        expectedUser.setName(newName);
+
+        doReturn(expectedUser).when(userRepository).save(expectedUser);
+
+        var actualUser = sut.update(expectedUser.getId(), expectedUser.getName());
+
+        assertNotNull(actualUser);
+        assertEquals(expectedUser, actualUser);
+    }
+
+    @Test
+    void testUpdateWhenExceptionThrown() {
+        doThrow(new SimulatedException()).when(userRepository).findByName(anyString());
+        assertThrows(InternalServerErrorException.class, () -> sut.update(1L, "test"));
+    }
+
+    @Test
+    void testExistsByNameWhenFoundUser() {
+        var expectedUser = userMock.generate();
+        doReturn(Optional.of(expectedUser)).when(userRepository).findByName(anyString());
+        assertThrows(ConflictException.class, () -> sut.existsByName(expectedUser.getName()));
+    }
+
+    @Test
+    void testExistsByNameWhenNotFoundUser() {
+        doReturn(Optional.empty()).when(userRepository).findByName(anyString());
+        sut.existsByName("test");
+    }
+
+    @Test
+    void testExistsByNameWhenExceptionThrown() {
+        doThrow(new SimulatedException()).when(userRepository).findByName(anyString());
+        assertThrows(InternalServerErrorException.class, () -> sut.existsByName("test"));
     }
 }

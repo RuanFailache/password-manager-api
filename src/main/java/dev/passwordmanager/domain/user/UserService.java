@@ -14,6 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+
     private final UserFactory userFactory;
 
     public Optional<User> find(Long id) {
@@ -27,20 +28,41 @@ public class UserService {
     }
 
     public User findOrThrow(Long id) {
-        return find(id).orElseThrow(() -> new NotFoundException("User not found"));
+        return this.find(id).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     public User create(String name) {
         log.info("Creating user with name: {}", name);
         try {
-            userRepository.findByName(name).ifPresent(user -> {
-                throw new ConflictException("User with name already exists");
-            });
             User user = userFactory.create(name);
             return userRepository.save(user);
         } catch (Exception exception) {
             log.error("Failed to create user with name: {}", name, exception);
             throw ExceptionHandler.handle(exception, "Failed to create user");
+        }
+    }
+
+    public User update(Long id, String name) {
+        log.info("Updating user with name: {}", name);
+        try {
+            User user = this.findOrThrow(id);
+            user.setName(name);
+            return userRepository.save(user);
+        } catch (Exception exception) {
+            log.error("Failed to update user with name: {}", name, exception);
+            throw ExceptionHandler.handle(exception, "Failed to update user");
+        }
+    }
+
+    public void existsByName(String name) {
+        log.info("Checking if user with name exists: {}", name);
+        try {
+            userRepository.findByName(name).ifPresent(user -> {
+                throw new ConflictException("User with name already exists");
+            });
+        } catch (Exception exception) {
+            log.error("Failed to check if user with name exists: {}", name, exception);
+            throw ExceptionHandler.handle(exception, "Failed to check if user exists");
         }
     }
 }
