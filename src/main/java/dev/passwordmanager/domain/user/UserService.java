@@ -3,6 +3,7 @@ package dev.passwordmanager.domain.user;
 import dev.passwordmanager.shared.exceptions.ConflictException;
 import dev.passwordmanager.shared.exceptions.NotFoundException;
 import dev.passwordmanager.shared.utils.ExceptionHandler;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -52,6 +53,7 @@ public class UserService {
         return this.find(id).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
+    @Transactional
     public User create(String name) {
         log.info("Creating user with name: {}", name);
         try {
@@ -63,6 +65,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public User update(Long id, String name) {
         log.info("Updating user with name: {}", name);
         try {

@@ -52,4 +52,10 @@ public class Password {
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime updatedAt;
+
+    public Password(User user, String description, String password) {
+        this.user = user;
+        this.description = description;
+        this.password = password;
+    }
 }
