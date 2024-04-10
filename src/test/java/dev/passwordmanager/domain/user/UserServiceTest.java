@@ -11,12 +11,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 
@@ -36,6 +37,43 @@ class UserServiceTest {
     @BeforeEach
     public void setup() {
         userMock = new UserMock();
+    }
+
+    @Test
+    void testFindAllWhenSuccessful() {
+        var expectedUsers = userMock.generateList(5);
+
+        doReturn(expectedUsers).when(userRepository).findAll();
+
+        var actualUsers = sut.findAll();
+
+        assertNotNull(actualUsers);
+        assertEquals(expectedUsers, actualUsers);
+    }
+
+    @Test
+    void testFindAllWhenExceptionThrown() {
+        doThrow(new SimulatedException()).when(userRepository).findAll();
+        assertThrows(InternalServerErrorException.class, () -> sut.findAll());
+    }
+
+    @Test
+    void testFindAllPaginatedWhenSuccessful() {
+        var mockedPageable = Pageable.unpaged();
+        var expectedUsers = new PageImpl<>(userMock.generateList(5));
+
+        doReturn(expectedUsers).when(userRepository).findAll(any(Pageable.class));
+
+        var actualUsers = sut.findAll(mockedPageable);
+
+        assertNotNull(actualUsers);
+        assertEquals(expectedUsers, actualUsers);
+    }
+
+    @Test
+    void testFindAllPaginatedWhenExceptionThrown() {
+        doThrow(new SimulatedException()).when(userRepository).findAll(any(Pageable.class));
+        assertThrows(InternalServerErrorException.class, () -> sut.findAll(any(Pageable.class)));
     }
 
     @Test
@@ -80,7 +118,6 @@ class UserServiceTest {
     void testCreateWhenSuccessful() {
         var expectedUser = userMock.generate();
 
-        doReturn(Optional.empty()).when(userRepository).findByName(anyString());
         doReturn(expectedUser).when(userFactory).create(anyString());
         doReturn(expectedUser).when(userRepository).save(expectedUser);
 
@@ -92,7 +129,6 @@ class UserServiceTest {
 
     @Test
     void testCreateWhenExceptionThrown() {
-        doReturn(Optional.empty()).when(userRepository).findByName(anyString());
         doThrow(new SimulatedException()).when(userFactory).create(anyString());
         assertThrows(InternalServerErrorException.class, () -> sut.create("test"));
     }
@@ -101,7 +137,6 @@ class UserServiceTest {
     void testUpdateWhenSuccessful() {
         var expectedUser = userMock.generate();
 
-        doReturn(Optional.empty()).when(userRepository).findByName(anyString());
         doReturn(Optional.of(expectedUser)).when(userRepository).findById(anyLong());
 
         var newName = "test";
@@ -117,7 +152,7 @@ class UserServiceTest {
 
     @Test
     void testUpdateWhenExceptionThrown() {
-        doThrow(new SimulatedException()).when(userRepository).findByName(anyString());
+        doThrow(new SimulatedException()).when(userRepository).findById(anyLong());
         assertThrows(InternalServerErrorException.class, () -> sut.update(1L, "test"));
     }
 

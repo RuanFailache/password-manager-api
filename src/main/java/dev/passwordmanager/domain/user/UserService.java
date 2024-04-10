@@ -5,8 +5,11 @@ import dev.passwordmanager.shared.exceptions.NotFoundException;
 import dev.passwordmanager.shared.utils.ExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -16,6 +19,26 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final UserFactory userFactory;
+
+    public List<User> findAll() {
+        log.info("Finding all users");
+        try {
+            return userRepository.findAll();
+        } catch (Exception exception) {
+            log.error("Failed to find all users", exception);
+            throw ExceptionHandler.handle(exception, "Failed to find all users");
+        }
+    }
+
+    public Page<User> findAll(Pageable pageable) {
+        log.info("Finding all users paginated");
+        try {
+            return userRepository.findAll(pageable);
+        } catch (Exception exception) {
+            log.error("Failed to find all users", exception);
+            throw ExceptionHandler.handle(exception, "Failed to find all users");
+        }
+    }
 
     public Optional<User> find(Long id) {
         log.info("Finding user with id: {}", id);
