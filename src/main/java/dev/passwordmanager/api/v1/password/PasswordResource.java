@@ -1,6 +1,7 @@
 package dev.passwordmanager.api.v1.password;
 
 import dev.passwordmanager.api.v1.password.dto.request.CreatePasswordDto;
+import dev.passwordmanager.api.v1.password.dto.request.UpdatePasswordDto;
 import dev.passwordmanager.domain.password.PasswordService;
 import dev.passwordmanager.domain.password.tag.PasswordTagService;
 import dev.passwordmanager.domain.user.UserService;
@@ -10,10 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/passwords")
@@ -36,11 +34,21 @@ public class PasswordResource implements PasswordOpenApi {
         }
 
         var encrypted = encryptionUtil.encrypt(dto.password());
-
         var password = passwordService.create(user, dto.description(), encrypted);
 
-        dto.tags().forEach(tag -> passwordTagService.create(password, tag));
+        dto.tags().forEach(tag -> passwordTagService.onCreatePassword(password, tag));
 
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Void> put(@PathVariable Long id, @Valid @RequestBody UpdatePasswordDto dto) {
+        var password = passwordService.findOrThrow(id);
+        var encrypted = encryptionUtil.encrypt(dto.password());
+
+        passwordService.update(password, dto.description(), encrypted);
+        passwordTagService.onUpdatePassword(password, dto.tags());
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

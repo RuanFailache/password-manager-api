@@ -24,4 +24,26 @@ public class PasswordService {
             throw ExceptionHandler.handle(exception, "Failed to create password");
         }
     }
+
+    public Password findOrThrow(Long id) {
+        log.info("Finding password by id: {}", id);
+        try {
+            return passwordRepository.findById(id).orElseThrow(() -> new RuntimeException("Password not found"));
+        } catch (Exception exception) {
+            log.error("Failed to find password by id: {}", id, exception);
+            throw ExceptionHandler.handle(exception, "Failed to find password");
+        }
+    }
+
+    public void update(Password password, String description, String passwordValue) {
+        log.info("Updating password: {}", password.getId());
+        try {
+            password.setDescription(description);
+            password.setPassword(passwordValue);
+            passwordRepository.save(password);
+        } catch (Exception exception) {
+            log.error("Failed to update password: {}", password.getId(), exception);
+            throw ExceptionHandler.handle(exception, "Failed to update password");
+        }
+    }
 }
