@@ -29,9 +29,6 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private UserFactory userFactory;
-
     private UserMock userMock;
 
     @BeforeEach
@@ -118,8 +115,7 @@ class UserServiceTest {
     void testCreateWhenSuccessful() {
         var expectedUser = userMock.generate();
 
-        doReturn(expectedUser).when(userFactory).create(anyString());
-        doReturn(expectedUser).when(userRepository).save(expectedUser);
+        doReturn(expectedUser).when(userRepository).save(any(User.class));
 
         var actualUser = sut.create(expectedUser.getName());
 
@@ -129,7 +125,7 @@ class UserServiceTest {
 
     @Test
     void testCreateWhenExceptionThrown() {
-        doThrow(new SimulatedException()).when(userFactory).create(anyString());
+        doThrow(new SimulatedException()).when(userRepository).save(any(User.class));
         assertThrows(InternalServerErrorException.class, () -> sut.create("test"));
     }
 

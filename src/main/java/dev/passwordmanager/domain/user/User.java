@@ -39,4 +39,8 @@ public class User {
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime updatedAt;
+
+    public User(String name) {
+        this.name = name;
+    }
 }

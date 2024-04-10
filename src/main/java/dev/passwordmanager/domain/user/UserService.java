@@ -18,8 +18,6 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    private final UserFactory userFactory;
-
     public List<User> findAll() {
         log.info("Finding all users");
         try {
@@ -57,7 +55,7 @@ public class UserService {
     public User create(String name) {
         log.info("Creating user with name: {}", name);
         try {
-            User user = userFactory.create(name);
+            User user = new User(name);
             return userRepository.save(user);
         } catch (Exception exception) {
             log.error("Failed to create user with name: {}", name, exception);
