@@ -27,7 +27,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Password> passwords;
 
     @Column(nullable = false)
@@ -42,5 +42,9 @@ public class User {
 
     public User(String name) {
         this.name = name;
+    }
+
+    public boolean isPasswordLimitReached() {
+        return this.passwords.size() >= 20;
     }
 }
