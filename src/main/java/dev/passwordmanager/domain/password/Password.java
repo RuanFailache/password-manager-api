@@ -3,6 +3,7 @@ package dev.passwordmanager.domain.password;
 import dev.passwordmanager.domain.password.tag.PasswordTag;
 import dev.passwordmanager.domain.user.User;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,11 +15,13 @@ import java.util.Set;
 
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @Entity
 @Table
 public class Password {
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
