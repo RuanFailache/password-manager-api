@@ -1,12 +1,13 @@
 package dev.passwordmanager.domain.user;
 
 import dev.passwordmanager.shared.exceptions.ConflictException;
-import dev.passwordmanager.shared.exceptions.InternalServerErrorException;
 import dev.passwordmanager.shared.exceptions.NotFoundException;
 import dev.passwordmanager.shared.utils.ExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -15,14 +16,18 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserFactory userFactory;
 
-    public User findOrThrow(Long id) {
+    public Optional<User> find(Long id) {
         log.info("Finding user with id: {}", id);
         try {
-            return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
-        }  catch (Exception exception) {
+            return userRepository.findById(id);
+        } catch (Exception exception) {
             log.error("Failed to find user with id: {}", id, exception);
             throw ExceptionHandler.handle(exception, "Failed to find user");
         }
+    }
+
+    public User findOrThrow(Long id) {
+        return find(id).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     public User create(String name) {

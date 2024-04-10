@@ -14,8 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -40,6 +39,25 @@ class UserServiceTest {
     }
 
     @Test
+    void testFindWhenSuccessful() {
+        var expectedUser = userMock.generate();
+
+        doReturn(Optional.of(expectedUser)).when(userRepository).findById(anyLong());
+
+        var actualUser = sut.find(expectedUser.getId());
+
+        assertNotNull(actualUser);
+        assertTrue(actualUser.isPresent());
+        assertEquals(expectedUser, actualUser.get());
+    }
+
+    @Test
+    void testFindWhenExceptionThrown() {
+        doThrow(new SimulatedException()).when(userRepository).findById(anyLong());
+        assertThrows(InternalServerErrorException.class, () -> sut.find(1L));
+    }
+
+    @Test
     public void testFindOrThrowWhenFoundUser() {
         var expectedUser = userMock.generate();
 
@@ -47,6 +65,7 @@ class UserServiceTest {
 
         var actualUser = sut.findOrThrow(expectedUser.getId());
 
+        assertNotNull(actualUser);
         assertEquals(expectedUser, actualUser);
     }
 
@@ -60,12 +79,6 @@ class UserServiceTest {
     }
 
     @Test
-    void testFindOrThrowWhenExceptionThrown() {
-        doThrow(new SimulatedException()).when(userRepository).findById(anyLong());
-        assertThrows(InternalServerErrorException.class, () -> sut.findOrThrow(1L));
-    }
-
-    @Test
     void testCreateWhenSuccessful() {
         var expectedUser = userMock.generate();
 
@@ -75,6 +88,7 @@ class UserServiceTest {
 
         var actualUser = sut.create(expectedUser.getName());
 
+        assertNotNull(actualUser);
         assertEquals(expectedUser, actualUser);
     }
 
