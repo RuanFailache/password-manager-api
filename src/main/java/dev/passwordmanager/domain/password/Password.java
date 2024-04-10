@@ -18,7 +18,7 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @Entity
-@Table
+@Table(name = "passwords")
 public class Password {
     @Id
     @EqualsAndHashCode.Include
@@ -33,10 +33,14 @@ public class Password {
     private String description;
 
     @Column(nullable = false)
-    private String value;
+    private String password;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "passwords_tags",
+            joinColumns = @JoinColumn(name = "password_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
     private Set<PasswordTag> tags;
 
     @Column(nullable = false)

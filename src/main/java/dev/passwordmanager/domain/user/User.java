@@ -17,7 +17,7 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @Entity
-@Table
+@Table(name = "users")
 public class User {
     @Id
     @EqualsAndHashCode.Include
@@ -27,7 +27,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private Set<Password> passwords;
 
     @Column(nullable = false)
