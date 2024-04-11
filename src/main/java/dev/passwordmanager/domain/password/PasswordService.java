@@ -1,6 +1,7 @@
 package dev.passwordmanager.domain.password;
 
 import dev.passwordmanager.domain.user.User;
+import dev.passwordmanager.shared.exceptions.NotFoundException;
 import dev.passwordmanager.shared.utils.ExceptionHandler;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class PasswordService {
     public Password findOrThrow(Long id) {
         log.info("Finding password by id: {}", id);
         try {
-            return passwordRepository.findById(id).orElseThrow(() -> new RuntimeException("Password not found"));
+            return passwordRepository.findById(id).orElseThrow(() -> new NotFoundException("Password not found"));
         } catch (Exception exception) {
             log.error("Failed to find password by id: {}", id, exception);
             throw ExceptionHandler.handle(exception, "Failed to find password");
