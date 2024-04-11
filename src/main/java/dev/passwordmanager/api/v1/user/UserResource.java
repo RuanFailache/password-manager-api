@@ -2,7 +2,6 @@ package dev.passwordmanager.api.v1.user;
 
 import dev.passwordmanager.api.v1.user.dto.request.SaveUserDto;
 import dev.passwordmanager.api.v1.user.dto.response.UserDto;
-import dev.passwordmanager.domain.user.User;
 import dev.passwordmanager.domain.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

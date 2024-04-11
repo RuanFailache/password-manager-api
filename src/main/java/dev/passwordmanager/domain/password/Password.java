@@ -35,7 +35,7 @@ public class Password {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "password", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PasswordTag> tags;
 
     @Column(nullable = false)
