@@ -35,4 +35,11 @@ public interface PasswordOpenApi {
             @ApiResponse(responseCode = "404", description = "Password not found"),
     })
     ResponseEntity<Void> put(Long id, UpdatePasswordDto dto);
+
+    @Operation(summary = "Delete password")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Password deleted"),
+            @ApiResponse(responseCode = "404", description = "Password not found"),
+    })
+    ResponseEntity<Void> delete(Long id);
 }

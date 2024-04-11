@@ -63,4 +63,10 @@ public class PasswordResource implements PasswordOpenApi {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@PathVariable  Long id) {
+        passwordService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

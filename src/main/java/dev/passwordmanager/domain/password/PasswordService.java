@@ -59,4 +59,14 @@ public class PasswordService {
             throw ExceptionHandler.handle(exception, "Failed to find passwords");
         }
     }
+
+    public void delete(Long id) {
+        log.info("Deleting password by id: {}", id);
+        try {
+            passwordRepository.deleteById(id);
+        } catch (Exception exception) {
+            log.error("Failed to delete password by id: {}", id, exception);
+            throw ExceptionHandler.handle(exception, "Failed to delete password");
+        }
+    }
 }
