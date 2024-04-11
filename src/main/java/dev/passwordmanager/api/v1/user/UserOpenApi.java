@@ -1,5 +1,7 @@
 package dev.passwordmanager.api.v1.user;
 
+import dev.passwordmanager.api.v1.user.dto.request.SaveUserDto;
+import dev.passwordmanager.api.v1.user.dto.response.UserDto;
 import dev.passwordmanager.domain.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,14 +16,14 @@ import org.springframework.http.ResponseEntity;
 public interface UserOpenApi {
     @Operation(summary = "Find all users")
     @ApiResponse(responseCode = "200", description = "Users found")
-    ResponseEntity<Page<User>> get(@ParameterObject Pageable pageable);
+    ResponseEntity<Page<UserDto>> get(@ParameterObject Pageable pageable);
 
     @Operation(summary = "Find user by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User found"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
-    ResponseEntity<User> getById(Long id);
+    ResponseEntity<UserDto> getById(Long id);
 
     @Operation(summary = "Create user")
     @ApiResponses(value = {
@@ -29,7 +31,7 @@ public interface UserOpenApi {
             @ApiResponse(responseCode = "400", description = "Invalid request"),
             @ApiResponse(responseCode = "409", description = "User already exists")
     })
-    ResponseEntity<Void> post(String name);
+    ResponseEntity<Void> post(SaveUserDto requestBody);
 
     @Operation(summary = "Update user")
     @ApiResponses(value = {
@@ -38,5 +40,5 @@ public interface UserOpenApi {
             @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "409", description = "User already exists")
     })
-    ResponseEntity<Void> put(Long id, String name);
+    ResponseEntity<Void> put(Long id, SaveUserDto requestBody);
 }
