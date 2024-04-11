@@ -36,11 +36,11 @@ public class PasswordService {
         }
     }
 
-    public void update(Password password, String description, String passwordValue) {
+    public void update(Password password, String description, String encryptedPassword) {
         log.info("Updating password: {}", password.getId());
         try {
             password.setDescription(description);
-            password.setPassword(passwordValue);
+            password.setPassword(encryptedPassword);
             passwordRepository.save(password);
         } catch (Exception exception) {
             log.error("Failed to update password: {}", password.getId(), exception);

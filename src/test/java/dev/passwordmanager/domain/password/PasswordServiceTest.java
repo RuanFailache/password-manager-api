@@ -1,6 +1,5 @@
 package dev.passwordmanager.domain.password;
 
-import dev.passwordmanager.domain.user.User;
 import dev.passwordmanager.shared.exceptions.InternalServerErrorException;
 import dev.passwordmanager.shared.exceptions.NotFoundException;
 import dev.passwordmanager.utils.exceptions.SimulatedException;
@@ -18,8 +17,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PasswordServiceTest {
@@ -62,9 +60,33 @@ class PasswordServiceTest {
         var description = "description";
         var password = "password";
 
-        doReturn(new SimulatedException()).when(passwordRepository).save(any(Password.class));
+        doThrow(new SimulatedException()).when(passwordRepository).save(any(Password.class));
 
         assertThrows(InternalServerErrorException.class, () -> sut.create(user, description, password));
+    }
+
+    @Test
+    void testUpdateWhenSuccessful() {
+        var password = passwordMock.generate();
+        var description = "description";
+        var passwordValue = "password";
+
+        doReturn(password).when(passwordRepository).save(any(Password.class));
+
+        sut.update(password, description, passwordValue);
+
+        verify(passwordRepository, atLeastOnce()).save(any(Password.class));
+    }
+
+    @Test
+    void testUpdateWhenExceptionIsThrown() {
+        var password = passwordMock.generate();
+        var description = "description";
+        var passwordValue = "password";
+
+        doThrow(new SimulatedException()).when(passwordRepository).save(any(Password.class));
+
+        assertThrows(InternalServerErrorException.class, () -> sut.update(password, description, passwordValue));
     }
 
     @Test
