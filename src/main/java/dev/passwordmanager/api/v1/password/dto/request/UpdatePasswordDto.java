@@ -14,10 +14,6 @@ public record UpdatePasswordDto(
 
         @NotBlank
         @Schema(description = "Password value", example = "123456")
-        String password,
-
-        @NotEmpty
-        @Schema(description = "Password tags", example = "'work', 'personal'")
-        List<String> tags
+        String password
 ) {
 }

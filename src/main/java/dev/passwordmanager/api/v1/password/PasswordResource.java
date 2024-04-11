@@ -47,7 +47,6 @@ public class PasswordResource implements PasswordOpenApi {
         var encrypted = encryptionUtil.encrypt(dto.password());
 
         passwordService.update(password, dto.description(), encrypted);
-        passwordTagService.onUpdatePassword(password, dto.tags());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
