@@ -6,6 +6,8 @@ import dev.passwordmanager.shared.utils.ExceptionHandler;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -45,6 +47,16 @@ public class PasswordService {
         } catch (Exception exception) {
             log.error("Failed to update password: {}", password.getId(), exception);
             throw ExceptionHandler.handle(exception, "Failed to update password");
+        }
+    }
+
+    public Page<Password> findByUser(User user, Pageable pageable) {
+        log.info("Finding passwords by user: {}", user.getName());
+        try {
+            return passwordRepository.findByUser(user, pageable);
+        } catch (Exception exception) {
+            log.error("Failed to find passwords by user: {}", user.getName(), exception);
+            throw ExceptionHandler.handle(exception, "Failed to find passwords");
         }
     }
 }
