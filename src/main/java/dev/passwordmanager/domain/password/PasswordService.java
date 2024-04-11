@@ -38,6 +38,7 @@ public class PasswordService {
         }
     }
 
+    @Transactional
     public void update(Password password, String description, String encryptedPassword) {
         log.info("Updating password: {}", password.getId());
         try {
@@ -60,6 +61,7 @@ public class PasswordService {
         }
     }
 
+    @Transactional
     public void delete(Long id) {
         log.info("Deleting password by id: {}", id);
         try {

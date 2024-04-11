@@ -25,7 +25,7 @@ public class PasswordTag {
     @Column(nullable = false)
     private String tag;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(nullable = false)
     private Password password;
 
