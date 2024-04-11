@@ -3,7 +3,7 @@ package dev.passwordmanager.api.v1.password;
 import dev.passwordmanager.api.v1.password.dto.request.CreatePasswordDto;
 import dev.passwordmanager.api.v1.password.dto.request.UpdatePasswordDto;
 import dev.passwordmanager.domain.password.PasswordService;
-import dev.passwordmanager.domain.password.tag.PasswordTagService;
+import dev.passwordmanager.domain.passwordtag.PasswordTagService;
 import dev.passwordmanager.domain.user.UserService;
 import dev.passwordmanager.shared.exceptions.ForbiddenException;
 import dev.passwordmanager.shared.utils.EncryptionUtil;

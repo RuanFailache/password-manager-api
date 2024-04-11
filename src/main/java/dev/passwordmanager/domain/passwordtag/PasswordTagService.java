@@ -1,4 +1,4 @@
-package dev.passwordmanager.domain.password.tag;
+package dev.passwordmanager.domain.passwordtag;
 
 import dev.passwordmanager.domain.password.Password;
 import jakarta.transaction.Transactional;
