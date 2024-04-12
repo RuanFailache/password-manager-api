@@ -12,7 +12,6 @@ public class UserMapper {
     private final PasswordMapper passwordMapper;
 
     public UserDto toDto(User user) {
-        var passwords = user.getPasswords().stream().map(passwordMapper::toDto).toList();
-        return new UserDto(user.getId(), user.getName(), passwords);
+        return new UserDto(user.getId(), user.getName());
     }
 }

@@ -1,6 +1,7 @@
 package dev.passwordmanager.domain.passwordtag;
 
 import dev.passwordmanager.domain.password.Password;
+import dev.passwordmanager.shared.exceptions.InternalServerErrorException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ public class PasswordTagService {
             passwordTagRepository.save(newTag);
         } catch (Exception exception) {
             log.error("Failed to create password tag: {}", tag, exception);
-            throw new RuntimeException("Failed to create password tag");
+            throw new InternalServerErrorException("Failed to create password tag");
         }
     }
 }
